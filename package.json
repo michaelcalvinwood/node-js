@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Michael Wood",
-  "license": "MIT",
+  "license": "SEE LICENSE IN license.md",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/michaelcalvinwood/node-js.git"
