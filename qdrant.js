@@ -1,9 +1,27 @@
 require ('dotenv').config();
 const axios = require('axios');
-const { v4: uuidv4 } = require('uuid');
+
 
 const host = process.env.QDRANT_HOST;
 const port = process.env.QDRANT_PORT;
+
+/*
+ * collections
+ */
+
+const promisfiedAxios = request => {
+    console.log('promisfiedAxios', request);
+    return new Promise (async(resolve, reject) => {
+        let response;
+    
+        try {
+            response = await axios(request);
+            return resolve({isSuccess: true, msg: response.data});
+        } catch (err) {
+            return resolve ({isSuccess: false, msg: err.response.data})
+        }
+    });
+}
 
 exports.createCollection = async (collectionName, size) => {
     const request = {
@@ -20,11 +38,11 @@ exports.createCollection = async (collectionName, size) => {
             }
         }
     }
-    
-    return axios(request);
+        
+    return promisfiedAxios(request);   
 }
 
-exports.confirmCollection = async (collectionName) => {
+exports.collectionInfo = async (collectionName) => {
     const request = {
         url: `${host}:${port}/collections/${collectionName}`,
         method: 'get'
@@ -33,14 +51,22 @@ exports.confirmCollection = async (collectionName) => {
     return axios(request);
 }
 
+exports.deleteCollection = async (collectionName) => {
+    const request = {
+        url: `${host}:${port}/collections/${collectionName}`,
+        method: 'DELETE'
+    }
+
+    return axios(request);
+}
+
 /*
- * point: { vector, payload}
+ * point: { id, vector, payload}
  */
 
 exports.addPoint = async (collectionName, point) => {
-    const { vector, payload } = point;
-    const id = uuidv4();
-
+    const { id, vector, payload } = point;
+    
     const request = {
         url: `${host}:${port}/collections/${collectionName}/points`,
         method: 'put',
@@ -60,3 +86,4 @@ exports.addPoint = async (collectionName, point) => {
 
     return axios(request);
 }
+
