@@ -4,7 +4,10 @@ const { v4: uuidv4 } = require('uuid');
 async function run () {
     let response;
 
-    response = await qdrant.createOpenAICollection('openai');
+    //response = await qdrant.createOpenAICollection('openai');
+    
+    response = await qdrant.addOpenAIPoint('openai', uuidv4(), 'yippy dippy');
+
     //const response = await qdrant.collectionInfo('test1');
     // const response = await qdrant.addPoint('test1', {
     //     id: uuidv4(),
