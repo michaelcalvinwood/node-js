@@ -23,7 +23,7 @@ const promisfiedAxios = request => {
     });
 }
 
-exports.createCollection = async (collectionName, size) => {
+exports.createCollection = async (collectionName, size, distance = 'Cosine') => {
     const request = {
         url: `${host}:${port}/collections/${collectionName}`,
         method: 'put',
@@ -34,7 +34,7 @@ exports.createCollection = async (collectionName, size) => {
         data: {
             vectors: {
                 size,
-                distance: 'Dot'
+                distance
             }
         }
     }
