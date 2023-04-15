@@ -2,7 +2,7 @@
   "name": "qdrant-node",
   "version": "1.0.0",
   "description": "NodeJs client for qdrant vector database",
-  "main": "qdrant.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
