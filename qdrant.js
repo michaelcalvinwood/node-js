@@ -22,3 +22,12 @@ exports.createCollection = async (collectionName, size) => {
     
     return axios(request);
 }
+
+exports.confirmCollection = async (collectionName) => {
+    const request = {
+        url: `${host}:${port}/collections/${collectionName}`,
+        method: 'get'
+    }
+
+    return axios(request);
+}
