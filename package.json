@@ -1,11 +1,22 @@
 {
   "name": "qdrant-node",
   "version": "1.0.0",
-  "description": "",
+  "description": "NodeJs client for qdrant vector database",
   "main": "qdrant.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Michael Wood",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelcalvinwood/node-js.git"
+  },
+  "keywords": [
+    "qdrant"
+  ],
+  "bugs": {
+    "url": "https://github.com/michaelcalvinwood/node-js/issues"
+  },
+  "homepage": "https://github.com/michaelcalvinwood/node-js#readme"
 }
