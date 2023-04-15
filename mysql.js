@@ -34,3 +34,5 @@ exports.query = query => {
   });
   })
 }
+
+exports.escape = string => mysql.escape(string);

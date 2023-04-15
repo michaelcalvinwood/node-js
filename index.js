@@ -1,15 +1,34 @@
+require('dotenv').config();
 const qdrant = require ('./qdrant');
 const { v4: uuidv4 } = require('uuid');
 const mysql = require('./mysql');
-
+const bot = require('./bot');
+const ingest = require('./ingest');
 
 async function run () {
     let response;
 
-    response = await mysql.query('SHOW TABLES');
+    response = ingest.pdf(process.cwd() + '/assets/pdf/PYMNTS-Online-Bank-Transfers-September-2022.pdf');
 
-    console.log(response);
+    // response = await bot.setBotConnectionInfo('test', 
+    // {
+    //     type: 'mysql',
+    //     host: 'chunk-1.instantchatbot.net',
+    //     database: 'chunks',
+    //     user: 'admin',
+    //     password: process.env.MYSQL_PASSWORD
+    // }, 
+    // {
+    //     type: 'qdrant',
+    //     host: 'qdrant-1.instantchatbot.net',
+    //     port: 6333,
+    //     collection: 'test'
+    // });
 
+
+    //response = await mysql.query('SHOW TABLES');
+
+    
     //response = await qdrant.createOpenAICollection('openai');
     
     //response = await qdrant.addOpenAIPoint('openai', uuidv4(), 'yippy dippy');

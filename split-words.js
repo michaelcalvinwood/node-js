@@ -1,4 +1,4 @@
-exports.chunks(string, chunk = 400, overlap = 200) { 
+exports.chunks = (string, chunk = 600, overlap = 200) => { 
     const newArray = string.split(" "); 
     let count = 0;
     const text = [];

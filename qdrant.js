@@ -3,9 +3,6 @@ const axios = require('axios');
 const { Configuration, OpenAIApi } = require("openai");
 const { v4: uuidv4 } = require('uuid');
 
-const host = process.env.QDRANT_HOST;
-const port = process.env.QDRANT_PORT;
-
 /*
  * collections
  */
@@ -23,7 +20,7 @@ const promisfiedAxios = request => {
     });
 }
 
-exports.createCollection = async (collectionName, size, distance = 'Cosine') => {
+exports.createCollection = async (host, port, collectionName, size, onDiskPayload = true, distance = 'Cosine') => {
     const request = {
         url: `${host}:${port}/collections/${collectionName}`,
         method: 'put',
@@ -42,7 +39,7 @@ exports.createCollection = async (collectionName, size, distance = 'Cosine') => 
     return promisfiedAxios(request);   
 }
 
-exports.collectionInfo = async (collectionName) => {
+exports.collectionInfo = async (host, port, collectionName) => {
     const request = {
         url: `${host}:${port}/collections/${collectionName}`,
         method: 'get'
@@ -51,7 +48,7 @@ exports.collectionInfo = async (collectionName) => {
     return promisfiedAxios(request);
 }
 
-exports.deleteCollection = async (collectionName) => {
+exports.deleteCollection = async (host, port, collectionName) => {
     const request = {
         url: `${host}:${port}/collections/${collectionName}`,
         method: 'DELETE'
@@ -65,7 +62,7 @@ exports.deleteCollection = async (collectionName) => {
  * Note: payload is optional
  */
 
-exports.addPoint = async (collectionName, point) => {
+exports.addPoint = async (host, port, collectionName, point) => {
     const { id, vector, payload } = point;
     
     const request = {
@@ -92,9 +89,9 @@ exports.addPoint = async (collectionName, point) => {
  * openAI interface
  */
 
-const getEmbedding = async (input) => {
+const getEmbedding = async (openAiKey, input) => {
     const configuration = new Configuration({
-        apiKey: process.env.OPENAI_API_KEY,
+        apiKey: openAiKey,
       });
       const openai = new OpenAIApi(configuration);
       let embeddingResponse;
@@ -112,16 +109,16 @@ const getEmbedding = async (input) => {
       return {isSuccess: true, msg: embedding};
 }
 
-exports.createOpenAICollection = async collectionName => {
-    return this.createCollection(collectionName, 1536);
+exports.createOpenAICollection = async (host, port, collectionName) => {
+    return this.createCollection(host, port, collectionName, 1536);
 }
 
-exports.addOpenAIPoint = async (collectionName, id, input) => {
-    let result = await getEmbedding(input);
+exports.addOpenAIPoint = async (host, port, openAiKey, collectionName, pointId, input) => {
+    let result = await getEmbedding(openAiKey, input);
 
     if (!result.isSuccess) return result;
 
     const vector = result.msg;
 
-    return await this.addPoint(collectionName, {id, vector});
+    return await this.addPoint(host, port, collectionName, {id: pointId, vector});
 }
