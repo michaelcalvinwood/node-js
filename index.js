@@ -1,12 +1,18 @@
 const qdrant = require ('./qdrant');
 const { v4: uuidv4 } = require('uuid');
+const mysql = require('./mysql');
+
 
 async function run () {
     let response;
 
+    response = await mysql.query('SHOW TABLES');
+
+    console.log(response);
+
     //response = await qdrant.createOpenAICollection('openai');
     
-    response = await qdrant.addOpenAIPoint('openai', uuidv4(), 'yippy dippy');
+    //response = await qdrant.addOpenAIPoint('openai', uuidv4(), 'yippy dippy');
 
     //const response = await qdrant.collectionInfo('test1');
     // const response = await qdrant.addPoint('test1', {
@@ -21,7 +27,7 @@ async function run () {
 
     // response = await qdrant.collectionInfo('test1');
 
-    console.log(response);
+    //console.log(response);
 }
 
 run();
