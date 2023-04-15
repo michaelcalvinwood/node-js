@@ -10,7 +10,6 @@ const port = process.env.QDRANT_PORT;
  */
 
 const promisfiedAxios = request => {
-    console.log('promisfiedAxios', request);
     return new Promise (async(resolve, reject) => {
         let response;
     
@@ -18,7 +17,7 @@ const promisfiedAxios = request => {
             response = await axios(request);
             return resolve({isSuccess: true, msg: response.data});
         } catch (err) {
-            return resolve ({isSuccess: false, msg: err.response.data})
+            return resolve ({isSuccess: false, msg: err.response && err.response.data ? err.response.data : err})
         }
     });
 }
@@ -48,7 +47,7 @@ exports.collectionInfo = async (collectionName) => {
         method: 'get'
     }
 
-    return axios(request);
+    return promisfiedAxios(request);
 }
 
 exports.deleteCollection = async (collectionName) => {
@@ -57,7 +56,7 @@ exports.deleteCollection = async (collectionName) => {
         method: 'DELETE'
     }
 
-    return axios(request);
+    return promisfiedAxios(request);
 }
 
 /*
@@ -84,6 +83,13 @@ exports.addPoint = async (collectionName, point) => {
         }
     }
 
-    return axios(request);
+    return promisfiedAxios(request);
 }
 
+exports.createOpenAICollection = async collectionName => {
+    return this.createCollection(collectionName, 1536);
+}
+
+exports.addOpenAIPoint = async (collectionName, data) => {
+    // turn data into vector
+}

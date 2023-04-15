@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 async function run () {
     let response;
 
-    response = await qdrant.createCollection('test2', 4);
+    response = await qdrant.createOpenAICollection('openai');
     //const response = await qdrant.collectionInfo('test1');
     // const response = await qdrant.addPoint('test1', {
     //     id: uuidv4(),
