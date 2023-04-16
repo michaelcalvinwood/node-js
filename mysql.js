@@ -1,4 +1,5 @@
 const mysql = require('mysql2');
+const mysqlPromise = require('mysql2/promise');
 
 const pool = mysql.createPool({
     connectionLimit : 5, //important
@@ -33,6 +34,22 @@ exports.query = query => {
       return resolve(data);
   });
   })
+}
+
+exports.singleQuery = (host, user, password, database, query) => {
+    return new Promise(async (resolve, reject) => {
+        const connection = await mysqlPromise.createConnection({
+            host,
+            user,
+            database,
+            password
+          });
+
+        const [rows, fields] = await connection.execute(query)
+
+          
+          return resolve(rows);
+    })
 }
 
 exports.escape = string => mysql.escape(string);
