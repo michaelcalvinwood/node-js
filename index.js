@@ -8,7 +8,11 @@ const ingest = require('./ingest');
 async function run () {
     let response;
 
-    response = ingest.pdf('test', process.cwd() + '/assets/pdf/PYMNTS-Online-Bank-Transfers-September-2022.pdf');
+    response = await qdrant.getContexts('test', process.env.OPENAI_API_KEY, 'Are millenials open to new forms of payment?');
+    console.log(response);
+    return;
+
+    response = ingest.pdf('test', process.cwd() + '/assets/pdf/PYMNTS-Online-Bank-Transfers-September-2022.pdf', process.env.OPENAI_API_KEY);
 
     // response = await bot.setBotConnectionInfo('test', 
     //     {
@@ -35,7 +39,8 @@ async function run () {
     //response = await mysql.query('SHOW TABLES');
 
     
-    //response = await qdrant.createOpenAICollection('openai');
+    // response = await qdrant.createOpenAICollection('test');
+    // console.log(response);
     
     //response = await qdrant.addOpenAIPoint('openai', uuidv4(), 'yippy dippy');
 

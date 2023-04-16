@@ -34,9 +34,9 @@ const extractFullPdfText = fileName => {
 
 const addDataSource = async (id, type, info) => await mysql.query(`INSERT INTO data_source (id, type, info) VALUES ('${id}','${type}', ${mysql.escape(JSON.stringify(info))})`);
 
-const getConnectionInfo = async (botId) => await mysql.query(`SELECT chunk, vector FROM connection_info WHERE bot_id = '${botId}'`);
+exports.getConnectionInfo = async (botId) => await mysql.query(`SELECT chunk, vector FROM connection_info WHERE bot_id = '${botId}'`);
 
-exports.pdf = async (botId, fileName) => {
+exports.pdf = async (botId, fileName, openAIKey) => {
     // get pdf info
 
     let dataBuffer = fs.readFileSync(fileName);
@@ -50,30 +50,28 @@ exports.pdf = async (botId, fileName) => {
 
     const dataSourceId = uuidv4();
 
-    result = await addDataSource(dataSourceId, 'pdf', fileName);
+    //result = await addDataSource(dataSourceId, 'pdf', fileName);
 
-    const connectionInfo = await getConnectionInfo(botId);
+    const connectionInfo = await this.getConnectionInfo(botId);
     const chunkConnection = JSON.parse(connectionInfo[0].chunk);
     const vectorConnection = JSON.parse(connectionInfo[0].vector);
 
     console.log('chunk', chunkConnection);
     console.log('vector', vectorConnection);
 
-
-
     const chunks = split.splitWords(text);
 
-    return;
-    
     let { host, user, database, password } = chunkConnection;
     
     for (let i = 0; i < chunks.length; ++i) {
         let chunkId = uuidv4();
-        let q = `INSERT INTO chunk (chunk_id, bot_id, src_id, chunk, meta) VALUES ('${chunkId}', '${botId}', '${dataSourceId}', ${mysql.escape(chunks[i])}, '')`;
-        console.log(q);
-        result = await mysql.singleQuery(host, user, password, database, q);
+        // let q = `INSERT INTO chunk (chunk_id, bot_id, src_id, chunk, meta) VALUES ('${chunkId}', '${botId}', '${dataSourceId}', ${mysql.escape(chunks[i])}, '')`;
+        // console.log(q);
+        // result = await mysql.singleQuery(host, user, password, database, q);
     
-        result = await qdrant.addOpenAIPoint(vectorConnection.host, vectorConnection.port, botId, chunkId, chunks[i]);
+        result = await qdrant.addOpenAIPoint(vectorConnection.host, vectorConnection.port, openAIKey, botId, chunkId, chunks[i]);
+
+        console.log('result', result);
     }
 
     // /botId/css & js scripts. JS script contains JWT token with vector connection info and openAI Key
